@@ -25,6 +25,6 @@ jobs:
         SSH_PASSPHRASE: ${{ secrets.SSH_PASSPHRASE }}
         SOURCE: "build/"
         REMOTE_HOST: ${{ secrets.HOST }}
-        REMOTE_USER: "flo"
+        REMOTE_USER: ${{ secrets.SSH_USER }}
         REMOTE_PORT: "22"
         TARGET: "~/web/app"
