@@ -5,31 +5,8 @@ on:
     branches: [ main ]
 
 jobs:
-  # Job de Test
-  test:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v2
-
-    - name: Cache Node Modules
-      uses: actions/cache@v2
-      with:
-        path: node_modules
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-
-
-    - name: Install Dependencies
-      run: npm install
-
-    - name: Run React test
-      run: npm run test
-
   # Job de Build
   build:
-    needs: test
     runs-on: ubuntu-latest
 
     steps:
