@@ -1,11 +1,25 @@
 name: Deploy React App
 
+# Déclencheurs du Workflow
 on:
   push:
-    branches: [ main ]
+    branches: [ main ]  # Déclenche le workflow sur les pushs vers la branche 'main'.
 
 jobs:
-  deploy:
+  # Job de Test
+  test:
+    runs-on: ubuntu-latest  # Spécifie l'environnement d'exécution (runner).
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2  # Récupère le code source du dépôt.
+
+    - name: Install Dependencies
+      run: npm install  # Installe les dépendances du projet.
+
+  # Job de Build
+  build:
+    needs: test  # Ce job dépend du succès du job 'test'.
     runs-on: ubuntu-latest
 
     steps:
@@ -16,14 +30,23 @@ jobs:
       run: npm install
 
     - name: Build
-      run: npm run build
+      run: npm run build  # Construit l'application React.
+
+  # Job de Déploiement
+  deploy:
+    needs: build  # Ce job dépend du succès du job 'build'.
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
 
     - name: Copy files to the server
-      uses: easingthemes/ssh-deploy@v2.1.5
+      uses: easingthemes/ssh-deploy@v2.1.5  # Utilise l'action ssh-deploy pour le déploiement.
       env:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        SOURCE: "build/"
-        REMOTE_HOST: ${{ secrets.HOST }}
-        REMOTE_USER: ${{ secrets.SSH_USER }}
-        REMOTE_PORT: "22"
-        TARGET: "~/web/app"
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}  # Clé SSH privée stockée dans les secrets GitHub.
+        SOURCE: "build/"  # Dossier source contenant les fichiers à déployer.
+        REMOTE_HOST: ${{ secrets.HOST }}  # Adresse du serveur distant.
+        REMOTE_USER: ${{ secrets.SSH_USER }}  # Utilisateur pour la connexion SSH.
+        REMOTE_PORT: "22"  # Port SSH (22 est le port par défaut).
+        TARGET: "~/web/app"  # Dossier cible sur le serveur distant.
