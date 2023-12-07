@@ -56,9 +56,6 @@ jobs:
         # Obtenir la date actuelle au format "yyyyMMddHHmmss"
         current_date=$(date "+%Y%m%d%H%M%S")
 
-        # Renommer le dossier build sur le serveur distant avec la date
-        mv ~/web/app/build ~/web/app/build_$current_date
-
         # Copier le nouveau build
-        scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r ./build/* ${{ secrets.SSH_USER }}@${{ secrets.HOST }}:~/web/app/build
+        scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r ./build/* ${{ secrets.SSH_USER }}@${{ secrets.HOST }}:~/web/app/build_$current_date
 
