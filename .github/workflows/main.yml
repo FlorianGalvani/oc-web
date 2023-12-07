@@ -36,12 +36,13 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v2
 
-    - name: Copy files to the server
-      uses: easingthemes/ssh-deploy@v2.1.5  # Utilise l'action ssh-deploy pour le déploiement.
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}  # Clé SSH privée stockée dans les secrets GitHub.
-        SOURCE: "build/"  # Dossier source contenant les fichiers à déployer.
-        REMOTE_HOST: ${{ secrets.HOST }}  # Adresse du serveur distant.
-        REMOTE_USER: ${{ secrets.SSH_USER }}  # Utilisateur pour la connexion SSH.
-        REMOTE_PORT: "22"  # Port SSH (22 est le port par défaut).
-        TARGET: "~/web/app"  # Dossier cible sur le serveur distant.
+    - name: Deploy using rsync
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: 22
+        script: |
+          # Synchroniser le contenu du dossier build avec le serveur distant en utilisant rsync
+          rsync -e "ssh" -r --delete ./build/ ${{ secrets.SSH_USER }}@${{ secrets.HOST }}:~/web/app
