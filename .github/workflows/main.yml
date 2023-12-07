@@ -42,5 +42,5 @@ jobs:
         ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
     - name: Deploy using scp with generated RSA private key
       run: |
-        scp -i /tmp/id_rsa -r ./build/* ${{ secrets.SSH_USER }}@${{ secrets.HOST }}:~/web/app/
+        scp -i ~/.ssh/id_rsa -r ./build/* ${{ secrets.SSH_USER }}@${{ secrets.HOST }}:~/web/app/
 
