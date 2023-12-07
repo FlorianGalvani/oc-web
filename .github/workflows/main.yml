@@ -35,5 +35,5 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v2
 
-    - name: Deploy using scp
-      run: scp -i ${{ secrets.SSH_PRIVATE_KEY }} -r ./build/* ${{ secrets.SSH_USER }}@${{ secrets.HOST }}:~/web/app
+    - name: Deploy using scp with raw private key
+      run: echo "${{ secrets.SSH_PRIVATE_KEY }}" > ssh_key.pem && chmod 600 ssh_key.pem && scp -i ssh_key.pem -r ./build/* ${{ secrets.SSH_USER }}@${{ secrets.HOST }}:~/web/app/
