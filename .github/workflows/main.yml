@@ -37,7 +37,7 @@ jobs:
 
     - name: Deploy using scp with generated RSA private key
       run: |
-        echo ${{ secrets.SSH_PRIVATE_KEY }} > /tmp/id_rsa
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > /tmp/id_rsa
         chmod 600 /tmp/id_rsa
         scp -i /tmp/id_rsa -r ./build/* ${{ secrets.SSH_USER }}@${{ secrets.HOST }}:~/web/app/
 
