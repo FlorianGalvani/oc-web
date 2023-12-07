@@ -2,7 +2,7 @@ name: Deploy React App
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   # Job de Build
@@ -40,7 +40,9 @@ jobs:
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+    - name: Copy build artifacts
+      run: |
+        cp -r ./build/* $GITHUB_WORKSPACE
     - name: Deploy using scp with generated RSA private key
       run: |
-        scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r ./build/* ${{ secrets.SSH_USER }}@${{ secrets.HOST }}:~/web/app/
-
+        scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r $GITHUB_WORKSPACE/* ${{ secrets.SSH_USER }}@${{ secrets.HOST }}:~/web/app/
