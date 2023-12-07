@@ -20,7 +20,6 @@ jobs:
         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
           ${{ runner.os }}-node-
-
     - name: Install Dependencies
       run: npm install
 
@@ -36,13 +35,5 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v2
 
-    - name: Deploy using rsync
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.SSH_USER }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        port: 22
-        script: |
-          # Synchroniser le contenu du dossier build avec le serveur distant en utilisant rsync
-          rsync -e "ssh" -r --delete ./build/ ${{ secrets.SSH_USER }}@${{ secrets.HOST }}:~/web/app
+    - name: Deploy using scp
+      run: scp -i ${{ secrets.SSH_PRIVATE_KEY }} -r ./build/* ${{ secrets.SSH_USER }}@${{ secrets.HOST }}:~/web/app
