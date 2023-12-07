@@ -53,9 +53,4 @@ jobs:
         path: ./build
     - name: Deploy using scp with generated RSA private key
       run: |
-        # Obtenir la date actuelle au format "yyyyMMddHHmmss"
-        current_date=$(date "+%Y%m%d%H%M%S")
-
-        # Copier le nouveau build
-        scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r ./build/* ${{ secrets.SSH_USER }}@${{ secrets.HOST }}:~/web/app/build_$current_date
-
+        scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r ./build/* ${{ secrets.SSH_USER }}@${{ secrets.HOST }}:~/web/app/
